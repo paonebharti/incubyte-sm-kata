@@ -7,6 +7,12 @@ RSpec.describe SalaryCalculator do
     result[:employee]
   end
 
+  let(:us_employee) do
+    result = Employee.create(full_name: 'John Doe', job_title: 'Manager',
+                             country: 'United States', salary: 100_000)
+    result[:employee]
+  end
+
   describe 'India deduction' do
     it 'applies 10% TDS for India' do
       result = SalaryCalculator.calculate(india_employee)
@@ -21,6 +27,18 @@ RSpec.describe SalaryCalculator do
     it 'returns the gross salary unchanged' do
       result = SalaryCalculator.calculate(india_employee)
       expect(result[:gross_salary]).to eq(100_000.0)
+    end
+  end
+
+  describe 'United States deduction' do
+    it 'applies 12% TDS for United States' do
+      result = SalaryCalculator.calculate(us_employee)
+      expect(result[:tds]).to eq(12_000.0)
+    end
+
+    it 'returns correct net salary for United States' do
+      result = SalaryCalculator.calculate(us_employee)
+      expect(result[:net_salary]).to eq(88_000.0)
     end
   end
 end
