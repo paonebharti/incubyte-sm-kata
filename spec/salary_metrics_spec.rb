@@ -37,4 +37,21 @@ RSpec.describe SalaryMetrics do
       expect(result[:average]).to eq(105_000.0)
     end
   end
+
+	describe '.by_job_title' do
+    it 'returns average salary for a given job title' do
+      result = SalaryMetrics.by_job_title('Engineer')
+      expect(result[:average]).to eq(70_000.0)
+    end
+
+    it 'includes the job title in the result' do
+      result = SalaryMetrics.by_job_title('Engineer')
+      expect(result[:job_title]).to eq('Engineer')
+    end
+
+    it 'calculates correct average across countries for a job title' do
+      result = SalaryMetrics.by_job_title('Manager')
+      expect(result[:average]).to eq(110_000.0)
+    end
+  end
 end
