@@ -59,4 +59,11 @@ RSpec.describe SalaryCalculator do
       expect(result[:net_salary]).to eq(100_000.0)
     end
   end
+
+  describe 'response structure' do
+    it 'includes employee_id, gross_salary, tds, net_salary, country' do
+      result = SalaryCalculator.calculate(india_employee)
+      expect(result.keys).to contain_exactly(:employee_id, :gross_salary, :tds, :net_salary, :country)
+    end
+  end
 end
