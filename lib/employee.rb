@@ -25,4 +25,22 @@ class Employee
       errs << 'salary must be positive' if salary && salary.to_f <= 0
     end
   end
+
+  def self.create(attrs)
+    employee = new(attrs)
+    return { success: false, errors: employee.errors } unless employee.valid?
+
+    id = DB[:employees].insert(
+      full_name: employee.full_name,
+      job_title: employee.job_title,
+      country:   employee.country,
+      salary:    employee.salary.to_f
+    )
+    { success: true, employee: find(id) }
+  end
+
+  def self.find(id)
+    row = DB[:employees].where(id: id).first
+    row ? new(row) : nil
+  end
 end
