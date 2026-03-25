@@ -1,0 +1,40 @@
+require 'spec_helper'
+
+RSpec.describe SalaryMetrics do
+  before(:each) do
+    Employee.create(full_name: 'Priya Sharma',  job_title: 'Engineer', country: 'India',         salary: 60_000)
+    Employee.create(full_name: 'Rahul Gupta',   job_title: 'Engineer', country: 'India',         salary: 80_000)
+    Employee.create(full_name: 'Anjali Singh',  job_title: 'Manager',  country: 'India',         salary: 100_000)
+    Employee.create(full_name: 'John Doe',      job_title: 'Manager',  country: 'United States', salary: 120_000)
+    Employee.create(full_name: 'Jane Smith',    job_title: 'Designer', country: 'United States', salary: 90_000)
+  end
+
+  describe '.by_country' do
+    it 'returns minimum salary for the given country' do
+      result = SalaryMetrics.by_country('India')
+      expect(result[:minimum]).to eq(60_000.0)
+    end
+
+    it 'returns maximum salary for the given country' do
+      result = SalaryMetrics.by_country('India')
+      expect(result[:maximum]).to eq(100_000.0)
+    end
+
+    it 'returns average salary for the given country' do
+      result = SalaryMetrics.by_country('India')
+      expect(result[:average]).to eq(80_000.0)
+    end
+
+    it 'includes the country in the result' do
+      result = SalaryMetrics.by_country('India')
+      expect(result[:country]).to eq('India')
+    end
+
+    it 'returns correct metrics for United States' do
+      result = SalaryMetrics.by_country('United States')
+      expect(result[:minimum]).to eq(90_000.0)
+      expect(result[:maximum]).to eq(120_000.0)
+      expect(result[:average]).to eq(105_000.0)
+    end
+  end
+end
