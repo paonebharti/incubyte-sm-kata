@@ -67,4 +67,45 @@ RSpec.describe Employee do
       expect(Employee.find(999)).to be_nil
     end
   end
+
+  describe '.all' do
+    it 'returns all employees' do
+      Employee.create(full_name: 'Alice Smith', job_title: 'Engineer', country: 'India', salary: 80_000)
+      Employee.create(full_name: 'Bob Jones', job_title: 'Designer', country: 'United States', salary: 90_000)
+      expect(Employee.all.size).to eq(2)
+    end
+  end
+
+  describe '.update' do
+    it 'updates an existing employee' do
+      result  = Employee.create(full_name: 'Alice Smith', job_title: 'Engineer',
+                                country: 'India', salary: 80_000)
+      id      = result[:employee].id
+      updated = Employee.update(id, salary: 95_000)
+      expect(updated[:success]).to be true
+      expect(updated[:employee].salary).to eq(95_000)
+    end
+
+    it 'returns error when employee not found' do
+      result = Employee.update(999, salary: 50_000)
+      expect(result[:success]).to be false
+      expect(result[:errors]).to include('Employee not found')
+    end
+  end
+
+  describe '.delete' do
+    it 'removes an employee from the database' do
+      result = Employee.create(full_name: 'Alice Smith', job_title: 'Engineer',
+                               country: 'India', salary: 80_000)
+      id     = result[:employee].id
+      Employee.delete(id)
+      expect(Employee.find(id)).to be_nil
+    end
+
+    it 'returns error when employee does not exist' do
+      result = Employee.delete(999)
+      expect(result[:success]).to be false
+      expect(result[:errors]).to include('Employee not found')
+    end
+  end
 end
