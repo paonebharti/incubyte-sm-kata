@@ -15,4 +15,17 @@ class SalaryMetrics
       average: (salaries.sum / salaries.size).round(2)
     }
   end
+
+	def self.by_job_title(job_title)
+    rows = DB[:employees].where(job_title: job_title).select(:salary).all
+
+    return nil if rows.empty?
+
+    salaries = rows.map { |r| r[:salary].to_f }
+
+    {
+      job_title: job_title,
+      average:   (salaries.sum / salaries.size).round(2)
+    }
+  end
 end
