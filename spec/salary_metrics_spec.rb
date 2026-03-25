@@ -54,4 +54,22 @@ RSpec.describe SalaryMetrics do
       expect(result[:average]).to eq(110_000.0)
     end
   end
+
+	describe 'edge cases' do
+    it 'returns nil for a country with no employees' do
+      expect(SalaryMetrics.by_country('Antarctica')).to be_nil
+    end
+
+    it 'returns nil for a job title with no employees' do
+      expect(SalaryMetrics.by_job_title('Astronaut')).to be_nil
+    end
+
+    it 'handles a country with a single employee' do
+      Employee.create(full_name: 'Carlos Silva', job_title: 'Engineer',
+                      country: 'Brazil', salary: 50_000)
+      result = SalaryMetrics.by_country('Brazil')
+      expect(result[:minimum]).to eq(result[:maximum])
+      expect(result[:average]).to eq(50_000.0)
+    end
+  end
 end
