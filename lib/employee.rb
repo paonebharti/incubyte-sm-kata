@@ -43,4 +43,8 @@ class Employee
     row = DB[:employees].where(id: id).first
     row ? new(row) : nil
   end
+
+  def to_h
+    { id: id, full_name: full_name, job_title: job_title, country: country, salary: salary }
+  end
 end
