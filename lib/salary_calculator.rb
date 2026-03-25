@@ -1,6 +1,7 @@
 class SalaryCalculator
   DEDUCTION_RATES = {
-    'India' => 0.10
+    'India' => 0.10,
+    'United States' => 0.12
   }.freeze
 
   def self.calculate(employee)
