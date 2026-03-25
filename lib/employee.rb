@@ -44,6 +44,36 @@ class Employee
     row ? new(row) : nil
   end
 
+  def self.all
+    DB[:employees].all.map { |row| new(row) }
+  end
+
+  def self.update(id, attrs)
+    employee = find(id)
+    return { success: false, errors: ['Employee not found'] } unless employee
+
+    updated_attrs = {
+      full_name: attrs[:full_name] || employee.full_name,
+      job_title: attrs[:job_title] || employee.job_title,
+      country:   attrs[:country]   || employee.country,
+      salary:    attrs[:salary]    || employee.salary
+    }
+
+    candidate = new(updated_attrs)
+    return { success: false, errors: candidate.errors } unless candidate.valid?
+
+    DB[:employees].where(id: id).update(updated_attrs)
+    { success: true, employee: find(id) }
+  end
+
+  def self.delete(id)
+    employee = find(id)
+    return { success: false, errors: ['Employee not found'] } unless employee
+
+    DB[:employees].where(id: id).delete
+    { success: true }
+  end
+
   def to_h
     { id: id, full_name: full_name, job_title: job_title, country: country, salary: salary }
   end
